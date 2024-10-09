@@ -1,8 +1,9 @@
 import math
 from random import randint
-from typing import List
 import matplotlib.pyplot as plt
-import np
+
+from math import sqrt, pi, exp
+from typing import List
 
 
 # T.normal(_n) = 2nd(k1) + 2nd(k2) + 2nd(k3) + 2nd(k4)
@@ -20,6 +21,27 @@ import np
 # k2 = 1
 # k3 = 7
 # k4 = 3
+
+
+def how_often(_list: List, _max=13, _min=0, _intervals_amount=13):
+    # _intervals = [x + 1 for x in range(len(_list))]
+    delta = _max / _intervals_amount
+    _frequencies_borders = [x * delta for x in range(0, _intervals_amount + 1)]
+    _frequencies = [0 for x in range(_intervals_amount + 1)]
+    for x in _list:
+        _i = 0
+        while True:
+            if x <= _frequencies_borders[_i]:
+                _frequencies[_i] += 1
+                break
+            _i += 1
+
+    for _i in range(len(_frequencies)):
+        _frequencies[_i] = _frequencies[_i] / (len(_list))
+
+    return _frequencies_borders, _frequencies
+
+
 class ListEvaluator:
     @staticmethod
     def math_expectance(_random_values: List):
@@ -84,32 +106,22 @@ for n in n_values:
     print(f"Среднеквадратическое отклонение {round(ListEvaluator.sredne_kvadr(generated_list), 2)}")
     print(Generator.get_list(n))
 
-print("\nЗадание 4")
-import numpy as np
+print("\nЗадание 4-9")
 
-# n_values = [10,20,50,100,200,500,10**3]
-n_values = [10]
-for n in n_values:
-    bins = 10
-    x = Generator.get_list(100)
-    mean = ListEvaluator.math_expectance(x)
-    std_dev = ListEvaluator.sredne_kvadr(x)
-    x = np.linspace(mean - 3 * std_dev, mean + 3 * std_dev, 100)
-    y = (1 / (std_dev * np.sqrt(2 * np.pi))) ** np.exp(-((x - mean)**2) / (2 * std_dev ** 2))
-    plt.plot(x,y)
-    plt.show()
+rnd_values_list = Generator.get_list(100)
 
-    # plt.hist(x, density=True, bins=bins)  # density=False would make counts
-    # plt.ylabel('Probability')
-    # plt.xlabel('Data')
-    # plt.show()
+frequencies_borders, frequencies = how_often(rnd_values_list, _intervals_amount=9)
+# среднеквадр. отклонение
+q = ListEvaluator.sredne_kvadr(rnd_values_list)
+# мат ожидание
+m = ListEvaluator.math_expectance(rnd_values_list)
+expected = [(1 / (q * sqrt(2 * pi))) * exp(
+    -((x - m) ** 2) / (2 * (q ** 2))
+) for x in range(14)]
 
-print("\nЗадание 5")
+plt.plot(expected, color="r")
 
-print("\nЗадание 6")
+plt.xticks(frequencies_borders)
+plt.bar(frequencies_borders, frequencies)
 
-print("\nЗадание 7")
-
-print("\nЗадание 8")
-
-print("\nЗадание 9")
+plt.show()
