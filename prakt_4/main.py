@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from math import sqrt, pi, exp
 from typing import List
 
+import numpy as np
+
 
 # T.normal(_n) = 2nd(k1) + 2nd(k2) + 2nd(k3) + 2nd(k4)
 # _n  =10 20 50 100 200 10^3
@@ -16,11 +18,6 @@ from typing import List
 # 1/S * sqrt(2pi)
 
 # k1 k2 k3 будут выданы каждому
-
-# k1 = 2
-# k2 = 1
-# k3 = 7
-# k4 = 3
 
 
 def how_often(_list: List, _max=13, _min=0, _intervals_amount=13):
@@ -38,6 +35,9 @@ def how_often(_list: List, _max=13, _min=0, _intervals_amount=13):
 
     for _i in range(len(_frequencies)):
         _frequencies[_i] = _frequencies[_i] / (len(_list))
+
+    for _i in range(len(_frequencies_borders)):
+        _frequencies_borders[_i] -= delta / 2
 
     return _frequencies_borders, _frequencies
 
@@ -108,19 +108,40 @@ for n in n_values:
 
 print("\nЗадание 4-9")
 
-rnd_values_list = Generator.get_list(100)
+rnd_values_list = Generator.get_list(1000)
 
 frequencies_borders, frequencies = how_often(rnd_values_list, _intervals_amount=9)
+print(sum(frequencies))
+# -------- Реальные M и D --------
 # среднеквадр. отклонение
 q = ListEvaluator.sredne_kvadr(rnd_values_list)
 # мат ожидание
 m = ListEvaluator.math_expectance(rnd_values_list)
+# Функция распределения
 expected = [(1 / (q * sqrt(2 * pi))) * exp(
-    -((x - m) ** 2) / (2 * (q ** 2))
-) for x in range(14)]
+    -((x / 10 - m) ** 2) / (2 * (q ** 2))
+) for x in range(0, 140)]
 
-plt.plot(expected, color="r")
+plt.plot([x / 10 for x in range(140)], expected, color="r")
 
+# -------- Теоретические M и D --------
+k1 = 2
+k2 = 1
+k3 = 7
+k4 = 3
+# среднеквадр. отклонение
+q = math.sqrt(
+    (((k1 - 0) ** 2) / 12 + ((k2 - 0) ** 2) / 12 + ((k3 - 0) ** 2) / 12 + ((k4 - 0) ** 2) / 12)
+)
+
+# мат ожидание
+m = (k1 + k2 + k3 + k4) / 2
+# Функция распределения
+expected = [(1 / (q * sqrt(2 * pi))) * exp(
+    -((x / 10 - m) ** 2) / (2 * (q ** 2))
+) for x in range(0, 140)]
+
+plt.plot([x / 10 for x in range(140)], expected, color="g")
 plt.xticks(frequencies_borders)
 plt.bar(frequencies_borders, frequencies)
 
