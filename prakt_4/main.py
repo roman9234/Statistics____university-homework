@@ -111,6 +111,7 @@ print("\nЗадание 4-9")
 rnd_values_list = Generator.get_list(1000)
 
 frequencies_borders, frequencies = how_often(rnd_values_list, _intervals_amount=9)
+
 print(sum(frequencies))
 # -------- Реальные M и D --------
 # среднеквадр. отклонение

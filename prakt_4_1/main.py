@@ -1,5 +1,10 @@
 # Используем другие последовательности случайных числе
+from math import sqrt, exp, pi
 from random import randint, random
+from typing import List
+
+from ListEvaluator import ListEvaluator
+
 
 # NA(n,p)
 # Функция гарантирует частоты
@@ -16,34 +21,91 @@ from random import randint, random
 
 # От Amin до Amax
 
+def how_often(_list: List, _max=1, _min=0, _intervals_amount=10):
+    # _intervals = [x + 1 for x in range(len(_list))]
+    delta = (_max-_min) / _intervals_amount
+    _frequencies_borders = [x * delta for x in range(1, _intervals_amount + 1)]
+    _frequencies = [0 for x in range(1,_intervals_amount + 1)]
+    for x in _list:
+        _i = 0
+        while True:
+            if x <= _frequencies_borders[_i]:
+                _frequencies[_i] += 1
+                break
+            _i += 1
+
+    for _i in range(len(_frequencies)):
+        _frequencies[_i] = _frequencies[_i] / (len(_list))
+
+    for _i in range(len(_frequencies_borders)):
+        _frequencies_borders[_i] -= delta / 2
+
+    return _frequencies_borders, _frequencies
+
+
+
 
 
 import matplotlib.pyplot as plt
 p = 0.5
-nA_values = []
+less_than_p_values_list = []
 
-# n_values = [50,100,200]
+n_values = [50,100,200]
 
-# for n in range(200):
+
+
+
 n = 1000
 m = 0
+random_values_list = []
 for i in range(1,n+1):
     ui = random()
     if ui < p:
         m+=1
-    nA = m / i
-    nA_values.append(nA)
+    less_than_p_value = m / i
+    random_values_list.append(ui)
+    less_than_p_values_list.append(less_than_p_value)
+
+    if i in n_values:
+    # if i == 50:
+        # -------- Реальные M и D --------
+        # среднеквадр. отклонение
+        average_mistake = ListEvaluator.sredne_kvadr(random_values_list)
+        # мат ожидание
+        math_expectance = ListEvaluator.math_expectance(random_values_list)
+        # Функция распределения
+        expected = [(1 / (average_mistake * sqrt(2 * pi))) * exp(
+            -((x / 10 - math_expectance) ** 2) / (2 * (average_mistake ** 2))
+        ) / 10 for x in range(0, 110)]
 
 
-plt.ylim(0, 1)
+        fig, ax = plt.subplots(1, 2, width_ratios=(2.0,5.0))
+        plot1 = ax[0]
+        plot2 = ax[1]
 
-plt.plot(list(range(n)), nA_values )
+        plot1.set_ylim(0,1)
+        plot2.set_xlim(0,1)
+        # plot2.set_ylim(0,0.2)
+
+        plot1.plot(list(range(i)), less_than_p_values_list)
+
+        frequencies_borders, frequencies = how_often(random_values_list)
+
+        print(sum(frequencies))
+
+        plot2.set_xticks(frequencies_borders)
+        plot2.plot([x / 10 for x in range(110)], expected, color="r")
+        plot2.bar(frequencies_borders, frequencies,width=0.1)
+        plot2.plot([x / 10 for x in range(110)], expected, color="r")
+
+        plt.show()
 
 
 
-plt.show()
 
 
+# plt.plot(list(range(n)), less_than_p_values_list )
+# plt.show()
 
 
 

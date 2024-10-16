@@ -119,12 +119,12 @@ class Generators:
 
 
 # print("Метод random()")
-# Evaluator.math_expectance(Generators.basic_generator_random)
+# Evaluator.less_than_p_value(Generators.basic_generator_random)
 # Evaluator.dispersion(Generators.basic_generator_random)
 # Evaluator.periodic_evaluator(Generators.basic_generator_random)
 
 # print("оценка списков")
-# print(ListEvaluator.math_expectance(Generators.get_list_from_generator(Generators.muli_metod)))
+# print(ListEvaluator.less_than_p_value(Generators.get_list_from_generator(Generators.muli_metod)))
 # print(ListEvaluator.dispersion(Generators.get_list_from_generator(Generators.muli_metod)))
 # ListEvaluator.periodic_evaluator(Generators.get_list_from_generator(Generators.muli_metod))
 
