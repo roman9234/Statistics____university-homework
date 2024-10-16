@@ -54,8 +54,8 @@ n_values = [50,100,200]
 
 
 
-p = 0.5
-# p = 0.1
+# p = 0.5
+p = 0.1
 n = 1000
 m = 0
 
@@ -72,16 +72,13 @@ for i in range(1,n+1):
 
     if i in n_values:
     # if i == 50:
-
-        # -------- M и D --------
+        # -------- Реальные M и D --------
         # среднеквадр. отклонение
         average_mistake = ListEvaluator.sredne_kvadr(random_values_list)
         print(f"Среднекв отклонение = {average_mistake}")
-
         # мат ожидание
         math_expectance = ListEvaluator.math_expectance(random_values_list)
         print(f"Мат ожидание = {math_expectance}")
-
         # Функция распределения
         expected = [(1 / (average_mistake * sqrt(2 * pi))) * exp(
             -((x / 10 - math_expectance) ** 2) / (2 * (average_mistake ** 2))
@@ -102,7 +99,6 @@ for i in range(1,n+1):
 
         frequencies_borders, frequencies = how_often(random_values_list)
 
-        # Сумма плозадей частот
         print(sum(frequencies))
 
         plot2.set_xticks(frequencies_borders)
@@ -111,29 +107,5 @@ for i in range(1,n+1):
         plot2.plot([x / 10 for x in range(110)], expected, color="r")
 
         plt.show()
-
-
-
-
-
-# plt.plot(list(range(n)), less_than_p_values_list )
-# plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
