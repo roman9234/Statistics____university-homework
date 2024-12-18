@@ -1,3 +1,4 @@
+import math
 from math import sqrt
 import numpy as np
 from scipy.stats import norm as qnorm, t as qt, chi, chi2
@@ -36,6 +37,7 @@ n4 = 12
 # Генеральны стандарт заменяем выборочным, которы расчитывается по формуле 3
 
 # Задание 1
+# Выбрали выборку из 4 варианта
 
 a41 = [9.245, 10.172, 12.718, 6.167]
 a42 = [9.919, 12.095, 5.811, 5.706, 12.016, 9.259]
@@ -43,6 +45,8 @@ a43 = [17.346, 5.909, 13.688, 6.508, 13.619, 5.948, 12.476, 7.664, 11.896, 12.35
 a44 = [5.359, 13.891, 10.171, 9.256, 16.561, 10.498, 9.716, 14.094, 9.558, 18.492, 12.564, 6.576]
 
 print("Задание 2")
+# Расчитываем для выборок
+# мат ожидание, дисперсию, среднее квадр отклонение, используя формулы
 
 print()
 print(a41)
@@ -68,18 +72,21 @@ print(f"Мат ожидание: {round(Le.math_expectance(a44), 3)}")
 print(f"Дисперсия: {round(Le.dispersion(a44), 3)}")
 print(f"Среднеквадратическое отклонение: {round(Le.sredne_kvadr(a44), 3)}")
 
+
 print()
 print("Задание 3")
 print()
-
+# Находим для заданного уровня значимости
+# граничные квантили для нормального закона рампределения Стюдента
 
 
 # Заданный список чисел
 # data = [10, 12, 14, 15, 18, 21, 22, 23, 25]
-data = [10.73, 5.88, 9.245, 10.172]
+# data = [10.73, 5.88, 9.245, 10.172]
 
 
 def quantiles(lst: list, p: float = 0.1):
+
     # Уровень значимости p
 
     # Количество степеней свободы для распределения Стьюдента df это n-1, где n - размер выборки
@@ -103,15 +110,18 @@ def quantiles(lst: list, p: float = 0.1):
     print(f"Нижний квантиль: {round(lower_quantile_t, 3)}")
     print(f"Верхний квантиль: {round(upper_quantile_t, 3)}")
 
-# Для уровня значимости 0.1
-quantiles(a41)
-quantiles(a42)
-quantiles(a43)
-quantiles(a44)
+for p in [0.1, 0.05, 0.02, 0.01]:  # задаем уровень значимости
+    print(f"p = {p}")
+    quantiles(a41, p)
+    quantiles(a42, p)
+    quantiles(a43, p)
+    quantiles(a44, p)
 
 print()
 print("Задание 4")
 print()
+# Расчитаем доверительные интервалы для генерального среднего испульзуя
+# нормальное распределение и распределения Стьюдента
 
 def dover_intervals(lst: list, p:float = 0.1):
 
@@ -136,32 +146,90 @@ def dover_intervals(lst: list, p:float = 0.1):
     print(f"\nВерхний предел для Стьютента: ", end="")
     a_max_t = Le.math_expectance(lst) + qt.ppf(1 - p / 2, len(lst) - 1) * (Le.sredne_kvadr(lst) / sqrt(len(lst)))
     print(a_max_t, end="")
+    print()
 
-dover_intervals(a44)
+for p in [0.1, 0.05, 0.02, 0.01]:  # задаем уровень значимости
+    print(f"p = {p}")
+    dover_intervals(a41, p)
+    dover_intervals(a42, p)
+    dover_intervals(a43, p)
+    dover_intervals(a44, p)
+
 
 print()
 print("Задание 5")
 print()
-
+# Находим для заданного уровня значимости граничные квантили для хи-квадрат
 
 print("Граничные квантили хи квадрат")
 
 def gran_kvan(lst: list, p:float = 0.1):
+    print(lst)
     print(chi2.ppf(1 - p / 2, len(lst) - 1))
     print(chi2.ppf(p / 2, len(lst) - 1))
 
-gran_kvan(a44)
+for p in [0.1, 0.05, 0.02, 0.01]:  # задаем уровень значимости
+    print(f"p = {p}")
+    gran_kvan(a41,p)
+    gran_kvan(a42,p)
+    gran_kvan(a43,p)
+    gran_kvan(a44,p)
 
 
 print()
 print("Задание 6")
 print()
+# Расчитываем доверительные интервалы для генеральной дисперссии
+# (нижние и верхние пределы для распределений)
 
-def dover_intervals(lst: list, p:float = 0.1):
-    s_min_2 = ((Le.sredne_kvadr(lst)**2)*(len(lst)-1)) / (chi2.ppf(1 - p / 2, len(lst) - 1))
-    print(s_min_2)
+from scipy.stats import norm, t, chi2
+def dover_intervals(n: list, p:float = 0.1):
+    print(n)
+    M = Le.math_expectance(n)
+    S = Le.sredne_kvadr(n)
+    S_min_2 = (S ** 2 * (len(n) - 1)) / chi2.ppf(1 - p / 2, len(n) - 1)
+    S_max_2 = (S ** 2 * (len(n) - 1)) / chi2.ppf(p / 2, len(n) - 1)
+    S_a_min = math.sqrt(S_min_2)
+    S_a_max = math.sqrt(S_max_2)
+    print("S_min_2",S_min_2)
+    print("S_max_2",S_max_2)
+    print("S_a_min", S_a_min)  # S_min
+    print("S_a_max", S_a_max)  # S_max
 
-dover_intervals(a44)
+for p in [0.1, 0.05, 0.02, 0.01]:  # задаем уровень значимости
+    print(f"p = {p}")
+    dover_intervals(a41,p)
+    dover_intervals(a42,p)
+    dover_intervals(a43,p)
+    dover_intervals(a44,p)
+
+print()
+print("Задание 7")
+print()
+print("Выше уже были указаны значения для разных уровней значимости")
+
+print()
+print("Задание 8")
+print()
+# Данные занесены в таблицу
+
+
+print()
+print("Задание 9")
+print()
+# Построим графики
+
+
+# Доверительные интервалы для мат ожидания в зависимости от выборки для p=0.1
+
+
+
+
+# Доверительные интервалы для ср.квад. отклонения в зависимости от объёма выборки для p=0.1
+
+
+
+
 
 
 

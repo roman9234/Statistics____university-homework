@@ -1,14 +1,9 @@
-import matplotlib.pyplot as plt
+from random import randint
+from ListEvaluator import ListEvaluator as Le
 
-x = range(10)
-y = range(10)
+q = [randint(0,10) for i in range(10)]
 
-fig, ax = plt.subplots(1, 2)
+print(Le.dispersion_old(q))
+print(Le.dispersion(q))
 
-plot1 = ax[0]
-plot2 = ax[1]
 
-plot1.plot(range(10), 'r') #row=0, col=0
-plot2.plot(range(10), 'g') #row=0, col=1
-
-plt.show()

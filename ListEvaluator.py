@@ -13,10 +13,24 @@ class ListEvaluator:
         # Должно быть 0.0833333333
         # только для
         _M = ListEvaluator.math_expectance(_random_values)
-        _diviations = []
+        # _diviations = []
+        D_summ = 0
         for _i in _random_values:
-            _diviations.append((_i - _M) ** 2)
-        return sum(_diviations) / (len(_diviations) - 1)
+            # _diviations.append((_i - _M) ** 2)
+            D_summ += _i ** 2
+        disp = ((D_summ / len(_random_values)) - _M ** 2) * len(_random_values) / (len(_random_values) - 1)  # Дисперсия
+        return disp
+
+    # @staticmethod
+    # def dispersion_old(_random_values: List):
+    #     # массив элементов, из каждого числа вычитаем мат ожидание и возводим в квадрат, а сумму элементов делим на количество числе -1
+    #     # Должно быть 0.0833333333
+    #     # только для
+    #     _M = ListEvaluator.math_expectance(_random_values)
+    #     _diviations = []
+    #     for _i in _random_values:
+    #         _diviations.append((_i - _M) ** 2)
+    #     return sum(_diviations) / (len(_diviations) - 1)
 
     @staticmethod
     def periodic_evaluator(_random_values: List):
